@@ -1,0 +1,8 @@
+{
+    "require": {
+        "twbs/bootstrap": "^3.3",
+        "components/jquery": "1.9.*",
+        "illuminate/database": "*",
+        "jasongrimes/paginator": "~1.0"
+    }
+}

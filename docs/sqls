@@ -1,0 +1,77 @@
+
+
+
+SQL # 1 – populate CL Acct drop down list
+SELECT
+ca.id,cac.loginname,COUNT(*)AS COUNT
+FROM corrlinks_messages cm
+JOIN corrlinks_accounts ca ON (cm.corrlinks_accounts_id = ca.id)
+JOIN corrlinks_account_credentials cac ON (cac.loginname = ca.loginname)
+WHERE cac.relay_type = 'support'
+AND cm.processed = TRUE
+GROUP BY cac.loginname
+ORDER BY COUNT DESC
+
+SQL # 2 – populate main list of unprocessed messages
+SELECT
+cm.id,cm.serverdate,cc.name,cc.inmatenumber,cm.subject,cm.body,ca.loginname
+FROM 
+corrlinks_messages cm
+JOIN corrlinks_message_contact cmc ON (cmc.message_id = cm.id)
+JOIN corrlinks_contacts cc ON (cmc.inmateid = cc.inmateid)
+JOIN corrlinks_accounts ca ON (ca.id = cm.corrlinks_accounts_id)
+WHERE
+cm.processed = FALSE
+AND message_type = 'inbox'
+AND cm.corrlinks_accounts_id = $corrlinks_acct_id_from_dropdown_box
+ORDER BY inmatenumber,serverdate ASC
+
+
+SQL # 3 – populate the Past Messages for IM #  XXXXXXXX
+SELECT
+cm.id,cm.serverdate,cc.name,cc.inmatenumber,cm.subject,cm.body AS Message, '' AS Reply
+FROM 
+corrlinks_messages cm
+JOIN corrlinks_message_contact cmc ON (cmc.message_id = cm.id)
+JOIN corrlinks_contacts cc ON (cmc.inmateid = cc.inmateid)
+JOIN corrlinks_accounts ca ON (ca.id = cm.corrlinks_accounts_id)
+WHERE
+cm.processed = FALSE
+AND message_type = 'inbox'
+AND cm.corrlinks_accounts_id = $corrlinks_acct_id_from_dropdown_box
+AND cc.inmatenumber = '$inmate_number'
+UNION
+SELECT
+cm.id,cm.serverdate,cc.name,cc.inmatenumber,cm.subject,'' AS Message, cm.body AS Reply
+FROM 
+corrlinks_messages cm
+JOIN corrlinks_message_contact cmc ON (cmc.message_id = cm.id)
+JOIN corrlinks_contacts cc ON (cmc.inmateid = cc.inmateid)
+JOIN corrlinks_accounts ca ON (ca.id = cm.corrlinks_accounts_id)
+WHERE
+cm.processed = FALSE
+AND message_type = 'sent'
+AND cm.corrlinks_accounts_id = $corrlinks_acct_id_from_dropdown_box
+AND cc.inmatenumber = '$inmate_number'
+ORDER BY serverdate ASC;
+
+
+SQL # 4 – updated of processed flag for rows checked
+UPDATE
+corrlinks_messages
+SET processed = TRUE
+WHERE id IN ('$list_from_the_check_box_items')
+
+
+SQL #5 – pop up reply window data
+SELECT
+cm.id,cc.name,cc.inmatenumber,cm.subject,cm.body,ca.loginname
+FROM 
+corrlinks_messages cm
+JOIN corrlinks_message_contact cmc ON (cmc.message_id = cm.id)
+JOIN corrlinks_contacts cc ON (cmc.inmateid = cc.inmateid)
+JOIN corrlinks_accounts ca ON (ca.id = cm.corrlinks_accounts_id)
+WHERE
+cm.id = $row_message_id;
+
+ 
