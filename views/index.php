@@ -55,7 +55,7 @@
               <input type="hidden" name="acct_id" id="acct_id" value="">
               <input type="hidden" name="pm_im_num" id="pm_im_num" value="">
               <input type="hidden" name="action" value="get_pm_list">
-              <input type="hidden" name="sort" value="">
+              <input type="hidden" name="sort" id="pm_form_sort" value="ASC">
               <input type="hidden" name="order" value="">
               <input type="hidden" name="page" id="page" value="1">
           </form>
@@ -66,3 +66,38 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+<!-- -----------pop up to reply ----------- -->
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="reply_popup">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Reply
+        </h4>
+      </div>
+
+
+      <div class="modal-body">
+          <p id="reply_ajax_loader" style="display:none;">
+            <img src="pic/ajax-loader.gif"  width="25" height="25" alt="loading...">
+          </p> 
+ 
+      <div id="reply_form_content">
+        
+      </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+

@@ -1,10 +1,14 @@
 <?php
 
-function get_pm_table_list($im_num,$order,$sort,$page) {
+function get_pm_table_list($acct_id,$im_num,$order,$sort,$page) {
 	$data = array();
 
+	$acct_id = (int) $acct_id;
+
+	$sort_sql = ($sort == "DESC") ? "DESC" : "ASC"; 
+
 	$sql = "SELECT
-				cm.id,cm.serverdate,cc.name,cc.inmatenumber,cm.subject,cm.body AS Message, '' AS Reply
+				cm.id,cm.serverdate,cc.name,cc.inmatenumber,cm.subject,cm.body AS message, '' AS reply
 			FROM 
 				corrlinks_messages cm
 				JOIN corrlinks_message_contact cmc ON (cmc.message_id = cm.id)
@@ -13,11 +17,11 @@ function get_pm_table_list($im_num,$order,$sort,$page) {
 			WHERE
 				cm.processed = FALSE
 				AND message_type = 'inbox'
-				AND cm.corrlinks_accounts_id = $corrlinks_acct_id_from_dropdown_box
-				AND cc.inmatenumber = '$inmate_number'
+				AND cm.corrlinks_accounts_id = $acct_id
+				AND cc.inmatenumber = '$im_num'
 		UNION
 			SELECT
-				cm.id,cm.serverdate,cc.name,cc.inmatenumber,cm.subject,'' AS Message, cm.body AS Reply
+				cm.id,cm.serverdate,cc.name,cc.inmatenumber,cm.subject,'' AS message, cm.body AS reply
 			FROM 
 				corrlinks_messages cm
 				JOIN corrlinks_message_contact cmc ON (cmc.message_id = cm.id)
@@ -26,9 +30,14 @@ function get_pm_table_list($im_num,$order,$sort,$page) {
 			WHERE
 				cm.processed = FALSE
 				AND message_type = 'sent'
-				AND cm.corrlinks_accounts_id = $corrlinks_acct_id_from_dropdown_box
-				AND cc.inmatenumber = '$inmate_number'
-			ORDER BY serverdate ASC";
+				AND cm.corrlinks_accounts_id = $acct_id
+				AND cc.inmatenumber = '$im_num'
+			ORDER BY serverdate $sort_sql";
+
+	$result = \DB::select($sql);
+	$data['sort'] = $sort_sql;
+	$data['table'] = $result;
+	return $data;
 }
 
 function set_as_processed($ids) {
@@ -102,6 +111,20 @@ function get_table_list($cc_acct,$order,$sort,$page) {
 	}
 
 	return $data;
+}
+
+function get_message_by_id($id) {
+	$sql = "SELECT
+				cm.id,cc.name,cc.inmatenumber,cm.subject,cm.body,ca.loginname
+			FROM 
+				corrlinks_messages cm
+				JOIN corrlinks_message_contact cmc ON (cmc.message_id = cm.id)
+				JOIN corrlinks_contacts cc ON (cmc.inmateid = cc.inmateid)
+				JOIN corrlinks_accounts ca ON (ca.id = cm.corrlinks_accounts_id)
+			WHERE
+				cm.id = ?";
+	return DB::select($sql,array($id));
+
 }
 
 

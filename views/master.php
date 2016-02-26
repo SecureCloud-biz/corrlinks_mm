@@ -135,7 +135,49 @@ $('.container').on('click','.reg_number', function (event) {
 
 
 
-    });
+
+//-------Sort By Date-------------------
+$('.container').on('click','#pm_message_sort_date', function (event) {
+    event.preventDefault();
+    var sort = $('#pm_form_sort').val();
+    if(sort == 'ASC') {
+        $('#pm_form_sort').val('DESC');
+    } else {
+        $('#pm_form_sort').val('ASC');
+    }
+
+    reload_pm_form();
+    return false;
+});
+
+
+//popup to reply
+$('.container').on('click','.run_popup_reply', function (event) {
+    event.preventDefault();
+    var message_id = $(this).data('id');
+    $('#reply_ajax_loader').show();
+    $('#reply_form_content').html('');
+
+    $('#reply_popup').modal('show');
+
+
+    var doc_url = window.location.href;
+            $.post( doc_url,
+                    {action: "get_form_for_reply", message_id: message_id },
+                    function( data ) {
+
+                        $('#reply_ajax_loader').hide();
+                        $('#reply_form_content').html(data);
+
+                    });    
+
+    return false;
+});
+
+
+
+//end ready
+});
     </script>
 </body>
 </html>

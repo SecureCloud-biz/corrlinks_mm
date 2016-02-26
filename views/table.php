@@ -18,7 +18,7 @@
 			<td><?php echo $row->name; ?></td>
 			<td><a href="#" class="reg_number"><?php echo $row->inmatenumber; ?></a></td>			
 			<td><span title="<?php echo $row->subject; ?>"><?php echo substr($row->subject,0,20); ?></span></td>			
-			<td><span title="<?php echo $row->body; ?>"><?php echo substr($row->body,0,20); ?></span></td>	
+			<td><a href="#" class="run_popup_reply" data-id="<?php echo $row->id; ?>" title="<?php echo $row->body; ?>"><?php echo substr($row->body,0,20); ?></a></td>	
 			<td><?php echo $row->serverdate; ?></td>
 		</tr>
 	<?php endforeach; ?>
@@ -32,7 +32,5 @@
 <nav style="margine: -30px 0px 0px 0px;"><?php echo $paginator; ?></nav>
 <input type="hidden" name="action" value="update_list">
 </form>
-
-
 
 <?php endif; ?>
