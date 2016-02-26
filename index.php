@@ -27,6 +27,19 @@ if($action == "get_list") {
 
 }
 
+//Get past messages table through ajax
+if($action == "get_pm_list") {
+	$im_num = isset($_POST['pm_im_num']) ? $_POST['pm_im_num'] : "";
+	$order = isset($_POST['order']) ? $_POST['order'] : "";
+	$sort = isset($_POST['sort']) ? $_POST['sort'] : "";
+	$page = isset($_POST['page']) ? $_POST['page'] : "";
+
+	$data = get_pm_table_list($im_num,$order,$sort,$page);
+
+	ajax_view("pm_table",$data);
+
+}
+
 
 
 //Update table through ajax

@@ -51,6 +51,14 @@
           <p id="pm_ajax_loader" style="display:none;">
             <img src="pic/ajax-loader.gif"  width="25" height="25" alt="loading...">
           </p> 
+          <form id="ajax_pm_table_control" method="post"> 
+              <input type="hidden" name="acct_id" id="acct_id" value="">
+              <input type="hidden" name="pm_im_num" id="pm_im_num" value="">
+              <input type="hidden" name="action" value="get_pm_list">
+              <input type="hidden" name="sort" value="">
+              <input type="hidden" name="order" value="">
+              <input type="hidden" name="page" id="page" value="1">
+          </form>
           <div id="pm_table_content">
           </div>
       </div>

@@ -51,6 +51,20 @@ function reload_form() {
                     });    
 }
 
+function reload_pm_form() {
+            $('#pm_table_content').html('');
+            $('#pm_ajax_loader').show();
+            var form_data = $('#ajax_pm_table_control').serializeArray();
+            var doc_url = window.location.href;
+            $.post( doc_url,
+                    form_data,
+                    function( data ) {
+                        $('#pm_ajax_loader').hide();
+                        $('#pm_table_content').html(data);
+                    });    
+
+}
+
     $( document ).ready(function() {
 
         $('.container').on('change', '#cc_acct', function(event){
@@ -108,12 +122,14 @@ $('.container').on('click','#update_checked', function (event) {
 $('.container').on('click','.reg_number', function (event) {
     event.preventDefault();
     var reg_num = $(this).text();
-
+    var acct_id = $('#cc_acct').val();
+    $('#acct_id').val(acct_id);
+    $('#pm_im_num').val(reg_num);
     $('#pm_table_content').html('');
     $('#pm_title_im_num').html(reg_num);
     $('#pm_ajax_loader').show();
     $('#past_messages_popup').modal('show');
-
+    reload_pm_form();
     return false;
 });
 

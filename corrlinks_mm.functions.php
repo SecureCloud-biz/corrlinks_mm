@@ -1,5 +1,36 @@
 <?php
 
+function get_pm_table_list($im_num,$order,$sort,$page) {
+	$data = array();
+
+	$sql = "SELECT
+				cm.id,cm.serverdate,cc.name,cc.inmatenumber,cm.subject,cm.body AS Message, '' AS Reply
+			FROM 
+				corrlinks_messages cm
+				JOIN corrlinks_message_contact cmc ON (cmc.message_id = cm.id)
+				JOIN corrlinks_contacts cc ON (cmc.inmateid = cc.inmateid)
+				JOIN corrlinks_accounts ca ON (ca.id = cm.corrlinks_accounts_id)
+			WHERE
+				cm.processed = FALSE
+				AND message_type = 'inbox'
+				AND cm.corrlinks_accounts_id = $corrlinks_acct_id_from_dropdown_box
+				AND cc.inmatenumber = '$inmate_number'
+		UNION
+			SELECT
+				cm.id,cm.serverdate,cc.name,cc.inmatenumber,cm.subject,'' AS Message, cm.body AS Reply
+			FROM 
+				corrlinks_messages cm
+				JOIN corrlinks_message_contact cmc ON (cmc.message_id = cm.id)
+				JOIN corrlinks_contacts cc ON (cmc.inmateid = cc.inmateid)
+				JOIN corrlinks_accounts ca ON (ca.id = cm.corrlinks_accounts_id)
+			WHERE
+				cm.processed = FALSE
+				AND message_type = 'sent'
+				AND cm.corrlinks_accounts_id = $corrlinks_acct_id_from_dropdown_box
+				AND cc.inmatenumber = '$inmate_number'
+			ORDER BY serverdate ASC";
+}
+
 function set_as_processed($ids) {
 	$sql = "UPDATE
 				`corrlinks_messages`
